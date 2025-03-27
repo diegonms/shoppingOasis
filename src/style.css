@@ -1,0 +1,39 @@
+.navbar {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100px;
+}
+.logo-navbar {
+  width: 80px;
+}
+
+.carousel-control-next {
+  width: 100px;
+  margin-top: 0px;
+}
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.carousel-item img {
+  height: 400px;
+  object-fit: cover;
+}
+
+.carousel-item {
+  height: 400px;
+}

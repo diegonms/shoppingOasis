@@ -1,8 +1,11 @@
 import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "../style.css";
 
 export default function HomePage() {
   return (
-    <div className="container">
+    <div className="container-fluid">
       <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
@@ -10,7 +13,6 @@ export default function HomePage() {
               src="/public/imagens/joaopedro.png"
               alt="Logo"
               className="logo-navbar"
-              style={{ width: "50px" }}
             />
           </a>
           <button
@@ -22,24 +24,24 @@ export default function HomePage() {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            {"ola"}
+            {""}
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link active" href="#">
-                  Home
+                  Início
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Features
+                  Lojas
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Pricing
+                  Eventos
                 </a>
               </li>
               <li className="nav-item dropdown">
@@ -50,22 +52,22 @@ export default function HomePage() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Dropdown
+                  Mais
                 </a>
                 <ul className="dropdown-menu">
                   <li>
                     <a className="dropdown-item" href="#">
-                      Action
+                      Horários
                     </a>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Another action
+                      Contato
                     </a>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Something else here
+                      Sobre
                     </a>
                   </li>
                 </ul>
@@ -86,7 +88,6 @@ export default function HomePage() {
               src="/imagens/evento1.jpeg"
               className="d-block w-100"
               alt="Evento 1"
-              style={{ height: "400px", objectFit: "cover" }}
             />
           </div>
           <div className="carousel-item">
@@ -94,7 +95,6 @@ export default function HomePage() {
               src="/imagens/propaganda1.jpeg"
               className="d-block w-100"
               alt="Loja 1"
-              style={{ height: "400px", objectFit: "cover" }}
             />
           </div>
           <div className="carousel-item">
@@ -102,7 +102,6 @@ export default function HomePage() {
               src="/imagens/evento2.jpeg"
               className="d-block w-100"
               alt="Evento 2"
-              style={{ height: "400px", objectFit: "cover" }}
             />
           </div>
           <div className="carousel-item">
@@ -110,7 +109,6 @@ export default function HomePage() {
               src="/imagens/propaganda2.png"
               className="d-block w-100"
               alt="Loja 2"
-              style={{ height: "400px", objectFit: "cover" }}
             />
           </div>
         </div>
