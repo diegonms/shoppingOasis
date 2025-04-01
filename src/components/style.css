@@ -44,17 +44,20 @@
   height: 377px;
   background: #a9a9a9;
   border-radius: 15px;
-  position: relative;
+  position: relative; /* ESSENCIAL NÃO ALTERAR */
+  overflow: hidden;
 }
 
 .evento-info {
   position: absolute;
   bottom: 0;
-  background: #e9e1e1;
+  left: 0;
   width: 100%;
-  padding: 25px;
+  background: #e9e1e1;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
+  padding: 8px 25px 41px 25px;
+  line-height: 1.8;
 }
 
 .evento-data {
@@ -74,16 +77,9 @@
 }
 
 .carrossel-item {
-  width: 300px;
-  height: 200px;
-  background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
+  width: 782px;
+  height: 522px;
+  flex-shrink: 0;
 }
 
 .carrossel-imagem {

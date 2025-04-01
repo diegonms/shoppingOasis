@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./style.css";
-
 const lojas = [
   { nome: "Loja 1", imagem: "https://placehold.co/300x200?text=Loja+1" },
   { nome: "Loja 2", imagem: "https://placehold.co/300x200?text=Loja+2" },
