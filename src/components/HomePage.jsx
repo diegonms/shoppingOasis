@@ -1,137 +1,125 @@
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "../style.css";
+import React, { useState } from "react";
+import "./style.css";
 
-export default function HomePage() {
+const lojas = [
+  { nome: "Loja 1", imagem: "https://placehold.co/300x200?text=Loja+1" },
+  { nome: "Loja 2", imagem: "https://placehold.co/300x200?text=Loja+2" },
+  { nome: "Loja 3", imagem: "https://placehold.co/300x200?text=Loja+3" },
+  { nome: "Loja 4", imagem: "https://placehold.co/300x200?text=Loja+4" },
+  { nome: "Loja 5", imagem: "https://placehold.co/300x200?text=Loja+5" },
+  { nome: "Loja 6", imagem: "https://placehold.co/300x200?text=Loja+6" },
+  { nome: "Loja 7", imagem: "https://placehold.co/300x200?text=Loja+7" },
+];
+
+const Header = () => (
+  <div className="header">
+    <div className="nav-menu">
+      <div>Início</div>
+      <div>Lojas</div>
+      <div>Eventos</div>
+      <div>Cinema</div>
+      <div>Cliente</div>
+    </div>
+    <div className="logo"></div>
+  </div>
+);
+
+const Banner = () => (
+  <img src="https://placehold.co/1440x480" alt="Banner" className="banner" />
+);
+
+const Eventos = () => (
+  <div>
+    <h2 className="titulo">Eventos recomendados</h2>
+    <div className="eventos-container">
+      {[1, 2].map((e) => (
+        <div key={e} className="evento-card">
+          <div className="evento-info">
+            <div className="evento-data">18/10 - 21/10</div>
+            <div className="evento-nome">Evento XX</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const CarrosselLojas = () => {
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  const next = () => {
+    setCarouselIndex((prev) => (prev + 1) % lojas.length);
+  };
+
+  const prev = () => {
+    setCarouselIndex((prev) => (prev - 1 + lojas.length) % lojas.length);
+  };
+
   return (
-    <div className="container-fluid">
-      <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            <img
-              src="/public/imagens/joaopedro.png"
-              alt="Logo"
-              className="logo-navbar"
-            />
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            {""}
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link active" href="#">
-                  Início
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Lojas
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Eventos
-                </a>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Mais
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Horários
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Contato
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Sobre
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+    <div>
+      <h2 className="titulo">Conheça nossas lojas</h2>
+      <div className="carrossel-container">
+        <button onClick={prev}>Anterior</button>
+        <div className="carrossel-item">
+          <img
+            src={lojas[carouselIndex].imagem}
+            alt={lojas[carouselIndex].nome}
+            className="carrossel-imagem"
+          />
+          <div className="carrossel-legenda">{lojas[carouselIndex].nome}</div>
         </div>
-      </nav>
-
-      <div
-        id="carouselEventosLojas"
-        className="carousel slide mt-5"
-        data-bs-ride="carousel"
-      >
-        <div className="carousel-inner">
-          <div className="carousel-item active">
-            <img
-              src="/imagens/evento1.jpeg"
-              className="d-block w-100"
-              alt="Evento 1"
-            />
-          </div>
-          <div className="carousel-item">
-            <img
-              src="/imagens/propaganda1.jpeg"
-              className="d-block w-100"
-              alt="Loja 1"
-            />
-          </div>
-          <div className="carousel-item">
-            <img
-              src="/imagens/evento2.jpeg"
-              className="d-block w-100"
-              alt="Evento 2"
-            />
-          </div>
-          <div className="carousel-item">
-            <img
-              src="/imagens/propaganda2.png"
-              className="d-block w-100"
-              alt="Loja 2"
-            />
-          </div>
-        </div>
-
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselEventosLojas"
-          data-bs-slide="prev"
-        >
-          <span className="carousel-control-prev-icon" aria-hidden="true" />
-          <span className="visually-hidden">Anterior</span>
-        </button>
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselEventosLojas"
-          data-bs-slide="next"
-        >
-          <span className="carousel-control-next-icon" aria-hidden="true" />
-          <span className="visually-hidden">Próximo</span>
-        </button>
+        <button onClick={next}>Próximo</button>
       </div>
     </div>
   );
-}
+};
+
+const Rodape = () => (
+  <div className="rodape">
+    <div className="rodape-content">
+      <div>
+        <h4>Horários</h4>
+        <p>Lojas: Seg - Sáb 10h às 22h | Dom 14h às 20h</p>
+        <p>
+          Alimentação: Seg - Qui 10h às 22h | Sex - Sáb 10h às 23h | Dom 11h às
+          22h
+        </p>
+        <p>Escritório: Seg - Sex 07h às 19h</p>
+      </div>
+      <div>
+        <h4>Endereço</h4>
+        <p>Rua do Leonardo, 16 - Jardim Diego</p>
+        <h4>Escritório</h4>
+        <p>Meu escritório é na praia e tô sempre na área</p>
+        <h4>Mapa</h4>
+      </div>
+      <div>
+        <h4>Contatos</h4>
+        <p>(47) 1307-2002</p>
+        <p>Email: contato@oasis.com</p>
+        <p>WhatsApp: Converse com nossa IA</p>
+      </div>
+      <div>
+        <h4>Estacionamento</h4>
+        <p>Até 10 min. - isento</p>
+        <p>10 até 30 min. - R$ 10,00</p>
+        <p>31 até 60 min. - R$ 17,00</p>
+        <p>2ª e 3ª hora - Grátis</p>
+      </div>
+    </div>
+  </div>
+);
+
+const ShoppingHomepage = () => {
+  return (
+    <div className="container">
+      <Header />
+      <Banner />
+      <Eventos />
+      <CarrosselLojas />
+      <Rodape />
+    </div>
+  );
+};
+
+export default ShoppingHomepage;
