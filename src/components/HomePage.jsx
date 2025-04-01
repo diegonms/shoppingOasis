@@ -1,14 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import "./style.css";
-const lojas = [
-  { nome: "Loja 1", imagem: "https://placehold.co/300x200?text=Loja+1" },
-  { nome: "Loja 2", imagem: "https://placehold.co/300x200?text=Loja+2" },
-  { nome: "Loja 3", imagem: "https://placehold.co/300x200?text=Loja+3" },
-  { nome: "Loja 4", imagem: "https://placehold.co/300x200?text=Loja+4" },
-  { nome: "Loja 5", imagem: "https://placehold.co/300x200?text=Loja+5" },
-  { nome: "Loja 6", imagem: "https://placehold.co/300x200?text=Loja+6" },
-  { nome: "Loja 7", imagem: "https://placehold.co/300x200?text=Loja+7" },
-];
+import CarrosselHero from "./CarrosselHero";
 
 const Header = () => (
   <div className="header">
@@ -42,36 +34,6 @@ const Eventos = () => (
     </div>
   </div>
 );
-
-const CarrosselLojas = () => {
-  const [carouselIndex, setCarouselIndex] = useState(0);
-
-  const next = () => {
-    setCarouselIndex((prev) => (prev + 1) % lojas.length);
-  };
-
-  const prev = () => {
-    setCarouselIndex((prev) => (prev - 1 + lojas.length) % lojas.length);
-  };
-
-  return (
-    <div>
-      <h2 className="titulo">Conheça nossas lojas</h2>
-      <div className="carrossel-container">
-        <button onClick={prev}>Anterior</button>
-        <div className="carrossel-item">
-          <img
-            src={lojas[carouselIndex].imagem}
-            alt={lojas[carouselIndex].nome}
-            className="carrossel-imagem"
-          />
-          <div className="carrossel-legenda">{lojas[carouselIndex].nome}</div>
-        </div>
-        <button onClick={next}>Próximo</button>
-      </div>
-    </div>
-  );
-};
 
 const Rodape = () => (
   <div className="rodape">
@@ -115,7 +77,7 @@ const ShoppingHomepage = () => {
       <Header />
       <Banner />
       <Eventos />
-      <CarrosselLojas />
+      <CarrosselHero />
       <Rodape />
     </div>
   );
