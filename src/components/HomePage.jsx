@@ -1,4 +1,6 @@
 import React from "react";
+import reactDom from "react-dom";
+import navbar from "./navbar.jsx";
 import "./style.css";
 import Footer from "./footer.jsx";
 
