@@ -4,7 +4,7 @@
   background: white;
   position: relative;
   padding: 20px;
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
 }
 
 /* Header Styles */
@@ -47,7 +47,7 @@
   height: auto;
   margin: 20px 0;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Events Section Styles */
@@ -192,14 +192,14 @@
 }
 
 .link {
-  color: #97EDFF;
+  color: #97edff;
   text-decoration: underline;
   cursor: pointer;
 }
 
 .small-link {
   font-size: 10px;
-  color: #97EDFF;
+  color: #97edff;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -210,7 +210,7 @@
     width: 500px;
     height: 300px;
   }
-  
+
   .carrossel-item {
     width: 600px;
     height: 400px;
@@ -223,35 +223,116 @@
     height: auto;
     padding: 20px;
   }
-  
+
   .nav-menu {
     flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
   }
-  
+
   .eventos-container {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .evento-card {
     width: 100%;
     max-width: 400px;
   }
-  
+
   .carrossel-item {
     width: 100%;
     height: 300px;
   }
-  
+
   .footer-columns {
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .titulo {
     margin: 30px 0 20px 20px;
     font-size: 24px;
   }
+}
+.logo-login {
+  height: 100px;
+  width: 100px;
+  margin-left: 2%;
+}
+
+.login-title {
+  margin-left: 15%;
+  font-size: 40px;
+}
+.input-user {
+  width: 437px;
+  margin-left: 15%;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+.input-user::placeholder {
+  color: #aaa;
+}
+
+.input-user:focus {
+  border-color: #0d4d4d;
+  box-shadow: 0 0 5px rgba(13, 77, 77, 0.5);
+}
+.input-password {
+  width: 437px;
+  margin-left: 15%;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+.input-password::placeholder {
+  color: #aaa;
+}
+
+.input-password:focus {
+  border-color: #0d4d4d;
+  box-shadow: 0 0 5px rgba(13, 77, 77, 0.5);
+}
+
+.text-muted {
+  margin-left: 15%;
+}
+.entrar-btn {
+  color: white;
+  background-color: #055f73;
+  border-radius: 8px;
+  margin-left: 15%;
+  margin-top: 20px;
+  padding: 12px;
+  width: 437px;
+}
+.entrar-btn:hover {
+  background-color: #06949e;
+  transition: 0.3s;
+}
+.container-input {
+  margin-top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.label-input {
+  margin-bottom: 8px;
+  margin-left: 0px;
+  font-weight: 600;
+  color: #333;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-left: 15%;
 }
