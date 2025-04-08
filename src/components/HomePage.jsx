@@ -3,6 +3,7 @@ import reactDom from "react-dom";
 import navbar from "./navbar.jsx";
 import "./style.css";
 import Footer from "./footer.jsx";
+import { Link } from "react-router-dom";
 
 const Header = () => (
   <div className="header">
@@ -12,6 +13,12 @@ const Header = () => (
       <div>Eventos</div>
       <div>Cinema</div>
       <div>Cliente</div>
+      <Link className="login-navbar" to="/login">
+        LOGIN
+      </Link>
+      <Link className="cadastro-navbar" to="/cadastro">
+        CADASTRO
+      </Link>
     </div>
     <div className="logo"></div>
   </div>
