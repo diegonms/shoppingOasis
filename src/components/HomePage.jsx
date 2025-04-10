@@ -1,28 +1,8 @@
 import React from "react";
-import reactDom from "react-dom";
-import navbar from "./navbar.jsx";
+import Navbar from "./navbar"; // Certifique-se que o nome do componente começa com maiúscula!
 import "./style.css";
 import Footer from "./footer.jsx";
-import { Link } from "react-router-dom";
-
-const Header = () => (
-  <div className="header">
-    <div className="nav-menu">
-      <div>Início</div>
-      <div>Lojas</div>
-      <div>Eventos</div>
-      <div>Cinema</div>
-      <div>Cliente</div>
-      <Link className="login-navbar" to="/login">
-        LOGIN
-      </Link>
-      <Link className="cadastro-navbar" to="/cadastro">
-        CADASTRO
-      </Link>
-    </div>
-    <div className="logo"></div>
-  </div>
-);
+import Logo from "../idVisual/logotipoPreto.svg";
 
 const Banner = () => (
   <img src="https://placehold.co/1440x480" alt="Banner" className="banner" />
@@ -46,12 +26,18 @@ const Eventos = () => (
 
 const ShoppingHomepage = () => {
   return (
-    <div className="container">
-      <Header />
+    <>
+      <Navbar />
+
+      {/* Banner FORA do container */}
       <Banner />
-      <Eventos />
-      <Footer />
-    </div>
+
+      {/* Restante DENTRO do container */}
+      <div className="container">
+        <Eventos />
+        <Footer />
+      </div>
+    </>
   );
 };
 
