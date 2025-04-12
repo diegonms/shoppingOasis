@@ -13,7 +13,7 @@ const Navbar = () => {
         <Link to="/">
           <img className="logo-navbar" src={Logo} alt="Logo" />
         </Link>
-        <div>Início</div>
+        <Link to="/" className="nav-link">Início</Link>
         <Link to="/paginalojas" className="nav-link">Lojas</Link>
         <div>Eventos</div>
         <div onClick={() => setIsMenuOpen(true)} style={{ cursor: "pointer" }}>
