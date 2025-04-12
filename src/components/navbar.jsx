@@ -42,7 +42,7 @@ const Navbar = () => {
                 className="close-btn"
                 onClick={() => setIsMenuOpen(false)}
               >
-                ×
+
               </button>
               <Link to="/">
                 <img className="logo-sidemenu" src={Logo} alt="Logo" />

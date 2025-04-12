@@ -1,7 +1,8 @@
 import React from "react";
-import Navbar from "./navbar"; // Certifique-se que o nome do componente começa com maiúscula!
+import Navbar from "./navbar";
 import "./style.css";
 import Footer from "./footer.jsx";
+import Lojas from "./lojas.jsx";
 import Logo from "../idVisual/logotipoPreto.svg";
 
 const Banner = () => (
@@ -35,6 +36,7 @@ const ShoppingHomepage = () => {
       {/* Restante DENTRO do container */}
       <div className="container">
         <Eventos />
+        <Lojas />
         <Footer />
       </div>
     </>
