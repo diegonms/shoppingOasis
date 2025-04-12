@@ -1,0 +1,27 @@
+.input-nome[type="file"] {
+    padding: 8px;
+  }
+  
+  select.input-nome {
+    padding: 12px;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    resize: vertical;
+    padding: 12px;
+  }
+  
+  .cadastro-container {
+    overflow-y: auto;       /* Permite rolagem vertical */
+    height: 100vh;          /* Altura total da viewport */
+    padding: 20px;          /* Espaçamento interno */
+    position: relative;     /* Para elementos filhos absolutos */
+  }
+  
+  
+  body, #root {
+    overflow-y: auto;
+    margin: 0;
+    min-height: 100vh;
+  }

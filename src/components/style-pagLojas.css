@@ -1,0 +1,64 @@
+.lojas-section {
+    margin-top: 50px;
+  }
+  
+  .lojas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 0 84px;
+    margin-bottom: 50px;
+  }
+  
+  .loja-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .loja-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .loja-imagem-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .loja-imagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .loja-info {
+    padding: 20px;
+  }
+  
+  .loja-nome {
+    font-size: 24px;
+    color: #001219;
+    margin-bottom: 8px;
+  }
+  
+  .loja-categoria {
+    font-size: 16px;
+    color: #055f73;
+    margin-bottom: 8px;
+  }
+  
+  .loja-email {
+    font-size: 14px;
+    color: #464646;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .lojas-container {
+      grid-template-columns: 1fr;
+      padding: 0 20px;
+    }
+  }

@@ -14,7 +14,7 @@ const Navbar = () => {
           <img className="logo-navbar" src={Logo} alt="Logo" />
         </Link>
         <div>Início</div>
-        <div>Lojas</div>
+        <Link to="/paginalojas" className="nav-link">Lojas</Link>
         <div>Eventos</div>
         <div onClick={() => setIsMenuOpen(true)} style={{ cursor: "pointer" }}>
           Cliente
@@ -60,7 +60,7 @@ const Navbar = () => {
               </Link>
               
               <Link 
-                to="/cadastro-loja" 
+                to="/cadastroNegocio" 
                 className="menu-link footer-content" 
                 style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
                 onClick={() => setIsMenuOpen(false)}
@@ -69,7 +69,7 @@ const Navbar = () => {
               </Link>
               
               <Link 
-                to="/cadastro-evento" 
+                to="/cadastroEvento" 
                 className="menu-link footer-content" 
                 style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
                 onClick={() => setIsMenuOpen(false)}
@@ -78,7 +78,7 @@ const Navbar = () => {
               </Link>
               
               <Link 
-                to="/trabalhe-conosco" 
+                to="/trabalheConosco" 
                 className="menu-link footer-content" 
                 style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
                 onClick={() => setIsMenuOpen(false)}

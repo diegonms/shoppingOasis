@@ -25,18 +25,30 @@ const Eventos = () => (
   </div>
 );
 
+// Dados das lojas que podem ser compartilhados entre componentes
+const lojasCadastradas = [
+  {
+    nome: "Aquazero",
+    email: "contato@aquazero.com",
+    categoria: "Bem-estar",
+    imagem: "https://placehold.co/300x200?text=Aquazero"
+  },
+  {
+    nome: "Aldeia Coworking",
+    email: "contato@aldeiacoworking.com",
+    categoria: "Escritórios",
+    imagem: "https://placehold.co/300x200?text=Aldeia+Coworking"
+  }
+];
+
 const ShoppingHomepage = () => {
   return (
     <>
       <Navbar />
-
-      {/* Banner FORA do container */}
       <Banner />
-
-      {/* Restante DENTRO do container */}
       <div className="container">
         <Eventos />
-        <Lojas />
+        <Lojas lojas={lojasCadastradas} /> {/* Passando as lojas como prop */}
         <Footer />
       </div>
     </>

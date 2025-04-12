@@ -51,12 +51,12 @@ export default function Cadastro() {
 
       <div className="imagem-container">
         <img
-          src="./src/idVisual/fundoLogin.png"
+          src="./src/idVisual/fundoCadastro.png"
           alt="Imagem de fundo"
           className="imagem imagem-fundo"
         />
         <img
-          src="./src/idVisual/fotoSobreposta.jpg"
+          src="./src/idVisual/cadastroSobreposta.jpg"
           alt="Imagem sobreposta"
           className="imagem imagem-topo"
         />
