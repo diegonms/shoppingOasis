@@ -323,7 +323,6 @@
 }
 .container-input {
   margin-top: 120px;
-  display: flex;
   flex-direction: column;
   gap: 20px;
 }
@@ -435,9 +434,7 @@
 }
 
 .container-input-cadastro {
-  margin-top: 120px;
-  display: flex;
-  flex-direction: column;
+  margin-top: 10px;
   gap: 20px;
 }
 
@@ -555,4 +552,8 @@
 .logo-sidemenu {
   height: 45px;
   width: 200px;
+}
+a.cadastro-link{
+    color: #001219;
+    text-decoration: none;
 }

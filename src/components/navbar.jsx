@@ -41,27 +41,60 @@ const Navbar = () => {
               <button
                 className="close-btn"
                 onClick={() => setIsMenuOpen(false)}
-              >
-
+              ></button>
+            <div className="side-menu">
+              <button className="close-btn" onClick={() => setIsMenuOpen(false)}>
+                ×
               </button>
+              
               <Link to="/">
-                <img className="logo-sidemenu" src={Logo} alt="Logo" />
+                <img className="logo-sidemenu" src="./src/idVisual/logotipoPreto.svg" alt="Logo" />
               </Link>
-              <h3>Área do Cliente</h3>
-              <Link
-                to="/login"
-                className="menu-link"
+              <Link 
+                to="/login" 
+                className="menu-link footer-content" 
+                style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Login
+                Login ou Cadastro
               </Link>
-              <Link
-                to="/cadastro"
-                className="menu-link"
+              
+              <Link 
+                to="/cadastro-loja" 
+                className="menu-link footer-content" 
+                style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Cadastro
+                Cadastre sua loja
               </Link>
+              
+              <Link 
+                to="/cadastro-evento" 
+                className="menu-link footer-content" 
+                style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Cadastre seu evento
+              </Link>
+              
+              <Link 
+                to="/trabalhe-conosco" 
+                className="menu-link footer-content" 
+                style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Trabalhe conosco
+              </Link>
+              
+              <Link 
+                to="/sair" 
+                className="menu-link footer-content" 
+                style={{ fontSize: '16px', color: '#BB3E03', textDecoration: 'none' }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Sair
+              </Link>
+            </div>
             </motion.div>
           </>
         )}
