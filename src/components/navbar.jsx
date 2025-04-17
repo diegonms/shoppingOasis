@@ -15,7 +15,7 @@ const Navbar = () => {
         </Link>
         <Link to="/" className="nav-link">Início</Link>
         <Link to="/paginalojas" className="nav-link">Lojas</Link>
-        <div>Eventos</div>
+        <Link to="/paginaeventos" className="nav-link">Eventos</Link>
         <div onClick={() => setIsMenuOpen(true)} style={{ cursor: "pointer" }}>
           Cliente
         </div>

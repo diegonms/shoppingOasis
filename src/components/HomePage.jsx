@@ -9,23 +9,23 @@ const Banner = () => (
   <img src="https://placehold.co/1440x480" alt="Banner" className="banner" />
 );
 
-const Eventos = () => (
+// Componente Eventos modificado para receber apenas o evento principal
+const Eventos = ({ eventoPrincipal }) => (
   <div className="eventos-section">
     <h2 className="titulo">Eventos recomendados</h2>
     <div className="eventos-container">
-      {[1, 2].map((e) => (
-        <div key={e} className="evento-card">
+      {eventoPrincipal && (
+        <div className="evento-card">
           <div className="evento-info">
-            <div className="evento-data">18/10 - 21/10</div>
-            <div className="evento-nome">Evento XX</div>
+            <div className="evento-data">{eventoPrincipal.data}</div>
+            <div className="evento-nome">{eventoPrincipal.nome}</div>
           </div>
         </div>
-      ))}
+      )}
     </div>
   </div>
 );
 
-// Dados das lojas que podem ser compartilhados entre componentes
 const lojasCadastradas = [
   {
     nome: "Aquazero",
@@ -41,14 +41,26 @@ const lojasCadastradas = [
   }
 ];
 
+const eventosCadastrados = [
+  {
+    nome: "Feira de Artesanato",
+    data: "25/10 - 28/10",
+    descricao: "Maior feira de artesanato da região com mais de 50 expositores",
+    imagem: "https://placehold.co/600x400?text=Feira+Artesanato"
+  },
+
+];
+
 const ShoppingHomepage = () => {
+  const [eventoPrincipal] = eventosCadastrados;
+
   return (
     <>
       <Navbar />
       <Banner />
       <div className="container">
-        <Eventos />
-        <Lojas lojas={lojasCadastradas} /> {/* Passando as lojas como prop */}
+        <Eventos eventoPrincipal={eventoPrincipal} /> {/* Passa apenas o principal */}
+        <Lojas lojas={lojasCadastradas} />
         <Footer />
       </div>
     </>
