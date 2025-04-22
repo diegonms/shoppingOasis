@@ -7,6 +7,7 @@ import CadastroEvento from './components/cadastroEvento';
 import TrabalheConosco from "./components/trabalheConosco";
 import PaginaLojas from "./components/paginaLojas";
 import PaginaEventos from "./components/paginaEventos";
+import PaginaAdm from "./components/paginaAdm";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/cadastroEvento" element={<CadastroEvento />} />
       <Route path="/trabalheConosco" element ={<TrabalheConosco />} />
       <Route path="/paginaeventos" element ={<PaginaEventos />} />
+      <Route path="/testeAdm" element={<PaginaAdm />} />
     </Routes>
   );
 }
