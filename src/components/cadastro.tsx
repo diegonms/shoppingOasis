@@ -14,30 +14,48 @@ export default function Cadastro() {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const handleCadastro = () => {
+  const handleCadastro = async () => {
     if (!nome || !email || !senha) {
       setErro("Preencha todos os campos.");
       return;
     }
-
+  
     if (!validarEmail(email)) {
       setErro("Digite um e-mail válido.");
       return;
     }
-
+  
     if (senha.length < 6) {
       setErro("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
-
+  
     setErro("");
-    // Aqui você pode chamar a API de cadastro
-    Swal.fire({
-      title: "Parabéns!",
-      text: "Cadastro feito com sucesso!",
-      icon: "success",
-    });
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/cadastro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, senha }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        Swal.fire({
+          title: "Parabéns!",
+          text: "Cadastro feito com sucesso!",
+          icon: "success",
+        });
+      } else {
+        setErro(data.error || "Erro ao cadastrar usuário.");
+      }
+    } catch (error) {
+      console.error(error);
+      setErro("Erro ao conectar com o servidor.");
+    }
   };
+  
 
   return (
     <div className="cadastro-container">

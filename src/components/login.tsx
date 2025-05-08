@@ -95,7 +95,7 @@ export default function Login() {
   style={{ paddingTop: 15}}
 >
         <Link to="/cadastro" className="cadastro-link">
-          Não possui uma conta?fCadastre-se aqui!
+          Não possui uma conta? Cadastre-se aqui!
         </Link>
       </div>
       </div>
