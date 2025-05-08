@@ -143,8 +143,6 @@
   
   /* Inputs */
   input[type="text"] {
-    padding: 6px 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    width: 100%;
   }

@@ -9,19 +9,37 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!usuario || !senha) {
       setErro("Preencha todos os campos.");
       return;
     }
-
-    setErro("");
-    Swal.fire({
-      title: "Login feito!",
-      text: "Bem-vindo(a) de volta!",
-      icon: "success",
-    });
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuario, senha }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        Swal.fire({
+          title: "Login feito!",
+          text: `Bem-vindo(a), ${data.user.nome}`,
+          icon: "success",
+        });
+        // redirecionar ou salvar dados do usuário aqui
+      } else {
+        setErro(data.error || "Erro ao fazer login.");
+      }
+    } catch (error) {
+      console.error(error);
+      setErro("Erro na comunicação com o servidor.");
+    }
   };
+  
 
   return (
     <div className="login-container">
@@ -77,7 +95,7 @@ export default function Login() {
   style={{ paddingTop: 15}}
 >
         <Link to="/cadastro" className="cadastro-link">
-          Cadastre-se aqui!
+          Não possui uma conta?fCadastre-se aqui!
         </Link>
       </div>
       </div>
