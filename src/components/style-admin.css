@@ -38,6 +38,11 @@
     text-align: left;
     cursor: pointer;
   }
+
+  .sidebar nav ul li button:hover {
+    background-color: #007bff;
+    cursor: pointer;
+  }
   
   .sidebar nav ul li button.active {
     background-color: rgba(255, 255, 255, 0.2);
@@ -146,3 +151,4 @@
     border: 1px solid #ddd;
     border-radius: 4px;
   }
+
