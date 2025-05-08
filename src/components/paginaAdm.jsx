@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style-admin.css";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
 const [activeSection, setActiveSection] = useState("dashboard");
@@ -8,6 +9,8 @@ const [data, setData] = useState([]);
 const [isLoading, setIsLoading] = useState(true);
 const [editingItem, setEditingItem] = useState(null);
 const [formData, setFormData] = useState({});
+const navigate = useNavigate();
+
 
 // Simulação de dados - substituir por chamadas à API real
 const mockData = {
@@ -58,8 +61,30 @@ const handleSave = () => {
 };
 
 const handleLogout = () => {
-  navigate ("/");
-}
+  Swal.fire({
+    title: "Tem certeza que deseja sair?",
+    text: "Você será redirecionado para a página inicial.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sim, sair",
+    cancelButtonText: "Cancelar"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Sessão encerrada",
+        text: "Você saiu do painel administrativo.",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        navigate("/");
+      });
+    }
+  });
+};
+
 
 const handleDelete = (id) => {
   Swal.fire({
