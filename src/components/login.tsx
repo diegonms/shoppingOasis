@@ -36,7 +36,7 @@ export default function Login() {
         if (data.user.tipo === "admin") {
           navigate("/testeADM");
         } else {
-          navigate("/home");
+          navigate("/");
         }
       });
       
