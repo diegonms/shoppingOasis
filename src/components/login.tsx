@@ -3,11 +3,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Login() {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!usuario || !senha) {
@@ -24,16 +27,19 @@ export default function Login() {
   
       const data = await response.json();
   
-      if (response.ok) {
-        Swal.fire({
-          title: "Login feito!",
-          text: `Bem-vindo(a), ${data.user.nome}`,
-          icon: "success",
-        });
-        // redirecionar ou salvar dados do usuário aqui
-      } else {
-        setErro(data.error || "Erro ao fazer login.");
-      }
+      Swal.fire({
+        title: "Login feito!",
+        text: `Bem-vindo(a), ${data.user.nome}`,
+        icon: "success",
+      }).then(() => {
+        localStorage.setItem("tipoUsuario", data.user.tipo);
+        if (data.user.tipo === "admin") {
+          navigate("/testeADM");
+        } else {
+          navigate("/home");
+        }
+      });
+      
     } catch (error) {
       console.error(error);
       setErro("Erro na comunicação com o servidor.");
