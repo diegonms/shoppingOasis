@@ -19,7 +19,9 @@
   padding: 0 200px;
   align-content: space-between;
   flex-wrap: nowrap;
+  
 }
+
 
 .nav-menu {
   font-family: "Forum", serif;
@@ -552,7 +554,7 @@
   height: 56px;
   display: block;
   margin-top: -15px;
-  margin-left: 0px;
+  margin-left: -250px;
 }
 .logo-sidemenu {
   height: 45px;
