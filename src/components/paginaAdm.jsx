@@ -10,6 +10,36 @@ const AdminPanel = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    totalUsuarios: 0,
+    lojasAtivas: 0,
+    eventosAtivos: 0,
+    pendentes: 0,
+});
+
+useEffect(() => {
+  const fetchStats = async () => {
+      try {
+          const [usuariosRes, lojasRes, eventosRes, pendentesRes] = await Promise.all([
+              fetch("http://localhost:8080/api/stats/usuarios").then(res => res.json()),
+              fetch("http://localhost:8080/api/stats/lojas").then(res => res.json()),
+              fetch("http://localhost:8080/api/stats/eventos").then(res => res.json()),
+              fetch("http://localhost:8080/api/stats/pendentes").then(res => res.json()),
+          ]);
+
+          setStats({
+              totalUsuarios: usuariosRes.total,
+              lojasAtivas: lojasRes.total,
+              eventosAtivos: eventosRes.total,
+              pendentes: pendentesRes.lojasPendentes + pendentesRes.eventosPendentes,
+          });
+      } catch (error) {
+          console.error("Erro ao buscar estatísticas:", error);
+      }
+  };
+
+  fetchStats();
+}, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,6 +66,7 @@ const AdminPanel = () => {
         setIsLoading(false);
         return;
     }
+    
 
     fetch(`http://localhost:8080${endpoint}`)
       .then(res => res.json())
@@ -236,19 +267,19 @@ const AdminPanel = () => {
             <div className="stats">
               <div className="stat-card">
                 <h3>Total Users</h3>
-                <p>{data.length}</p>
+                <p>{stats.totalUsuarios}</p>
               </div>
               <div className="stat-card">
                 <h3>Lojas Ativas</h3>
-                <p>-</p>
+                <p>{stats.lojasAtivas}</p>
               </div>
               <div className="stat-card">
                 <h3>Eventos Ativos</h3>
-                <p>-</p>
+                <p>{stats.eventosAtivos}</p>
               </div>
               <div className="stat-card">
                 <h3>Pendentes</h3>
-                <p>-</p>
+                <p>{stats.pendentes}</p>
               </div>
             </div>
           </div>
