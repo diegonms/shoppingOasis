@@ -10,6 +10,8 @@ import PaginaEventos from "./components/paginaEventos";
 import PaginaAdm from "./components/paginaAdm";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import TesteADM from "./components/paginaAdm";
+import Usuario from "./components/usuario";
+
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
       <Route path="/cadastroEvento" element={<CadastroEvento />} />
       <Route path="/trabalheConosco" element ={<TrabalheConosco />} />
       <Route path="/paginaeventos" element ={<PaginaEventos />} />
+      <Route path="/usuario" element={<Usuario />} />
+
       <Route
         path="/testeADM"
         element={
