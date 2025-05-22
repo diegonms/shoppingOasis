@@ -119,6 +119,17 @@ export default function Cadastro() {
           />
         </div>
 
+        <div className="input-group senha mb-3">
+          <label className="label-input">Confirmar Senha</label>
+          <input
+            type="password"
+            className="input-password-cadastro"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+        </div>
+
         <button className="cadastrar-btn" onClick={handleCadastro}>
           Cadastrar
         </button>
