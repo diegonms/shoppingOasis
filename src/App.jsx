@@ -11,6 +11,7 @@ import PaginaAdm from "./components/paginaAdm";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import TesteADM from "./components/paginaAdm";
 import Usuario from "./components/usuario";
+import PrivateRouteUser from './components/PrivateRouteUser';
 
 
 function App() {
@@ -24,7 +25,6 @@ function App() {
       <Route path="/cadastroEvento" element={<CadastroEvento />} />
       <Route path="/trabalheConosco" element ={<TrabalheConosco />} />
       <Route path="/paginaeventos" element ={<PaginaEventos />} />
-      <Route path="/usuario" element={<Usuario />} />
 
       <Route
         path="/testeADM"
@@ -33,6 +33,14 @@ function App() {
           <TesteADM />
         </PrivateRouteAdmin>
   }
+/>
+      <Route
+        path="/usuario"
+        element={
+          <PrivateRouteUser>
+            <Usuario/>
+          </PrivateRouteUser>
+        }
 />
     </Routes>
   );

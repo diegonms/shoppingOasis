@@ -43,6 +43,10 @@
   color: #001219;
 }
 
+.nav-menu :hover {
+  color: #1980c5;
+}
+
 .logo {
   width: 221px;
   height: 47px;

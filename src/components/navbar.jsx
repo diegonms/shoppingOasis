@@ -3,9 +3,20 @@ import "./style.css";
 import Logo from "../idVisual/logotipoPreto.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const tipoUsuario = localStorage.getItem("tipoUsuario");
+
+  const handleLogout = () => {
+    localStorage.clear(); 
+    setIsMenuOpen(false); 
+    navigate("/");   
+  };
+
 
   return (
     <div className="header">
@@ -16,7 +27,11 @@ const Navbar = () => {
         <Link to="/" className="nav-link">Início</Link>
         <Link to="/paginalojas" className="nav-link">Lojas</Link>
         <Link to="/paginaeventos" className="nav-link">Eventos</Link>
+
+        {tipoUsuario && (
         <Link to="/usuario" className="nav-link">Usuário</Link>
+)}
+
 
         <div onClick={() => setIsMenuOpen(true)} style={{ cursor: "pointer" }}>
           Cliente
@@ -88,14 +103,14 @@ const Navbar = () => {
                 Trabalhe conosco
               </Link>
               
-              <Link 
-                to="/sair" 
+              <div 
                 className="menu-link footer-content" 
-                style={{ fontSize: '16px', color: '#BB3E03', textDecoration: 'none' }}
-                onClick={() => setIsMenuOpen(false)}
+                style={{ fontSize: '16px', color: '#BB3E03', textDecoration: 'none', cursor: 'pointer' }}
+                onClick={handleLogout}
               >
                 Sair
-              </Link>
+              </div>
+
             </div>
             </motion.div>
           </>
