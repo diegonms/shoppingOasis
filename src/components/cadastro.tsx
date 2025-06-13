@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const navigate = useNavigate();
 
   const validarEmail = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -46,6 +47,8 @@ export default function Cadastro() {
           title: "Parabéns!",
           text: "Cadastro feito com sucesso!",
           icon: "success",
+        }).then(() => {
+          navigate("/");
         });
       } else {
         setErro(data.error || "Erro ao cadastrar usuário.");

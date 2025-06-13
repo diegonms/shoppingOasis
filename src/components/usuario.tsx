@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Usuario() {
   const [nome, setNome] = useState("");
@@ -11,9 +11,13 @@ export default function Usuario() {
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [erro, setErro] = useState("");
   const [idUsuario, setIdUsuario] = useState("");
+  const [senhaAtual, setSenhaAtual] = useState("");
+  const [novaSenha, setNovaSenha] = useState("");
+  const [confirmarNovaSenha, setConfirmarNovaSenha] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const id = localStorage.getItem("idUsuario"); // Certifique-se de salvar isso no login
+    const id = localStorage.getItem("idUsuario"); 
     if (!id) return;
 
     fetch(`http://localhost:8080/api/usuario/${id}`)
@@ -23,7 +27,8 @@ export default function Usuario() {
         setNome(data.nome || "");
         setEmail(data.email || "");
         setSenha(data.senha || "");
-        setConfirmarSenha(data.senha || "");
+        setNovaSenha("");
+        setConfirmarNovaSenha("");
       })
       .catch((err) => {
         console.error("Erro ao carregar dados:", err);
@@ -36,40 +41,54 @@ export default function Usuario() {
 
   // Atualizar dados
   const handleSalvar = async () => {
-    if (!nome || !email || !senha || !confirmarSenha) {
-      setErro("Preencha todos os campos.");
+    if (!nome || !email) {
+      setErro("Preencha nome e email.");
       return;
     }
-
     if (!validarEmail(email)) {
       setErro("Digite um e-mail válido.");
       return;
     }
-
-    if (senha.length < 6) {
-      setErro("A senha deve ter pelo menos 6 caracteres.");
+    // Sempre exige senha atual para qualquer alteração
+    if (!senhaAtual) {
+      setErro("Informe a senha atual para atualizar seus dados.");
       return;
     }
-
-    if (senha !== confirmarSenha) {
-      setErro("As senhas não coincidem.");
-      return;
+    // Só exige nova senha e confirmação se o usuário quiser trocar a senha
+    if (novaSenha || confirmarNovaSenha) {
+      if (!novaSenha || !confirmarNovaSenha) {
+        setErro("Preencha a nova senha e a confirmação para alterar a senha.");
+        return;
+      }
+      if (novaSenha.length < 6) {
+        setErro("A nova senha deve ter pelo menos 6 caracteres.");
+        return;
+      }
+      if (novaSenha !== confirmarNovaSenha) {
+        setErro("A nova senha e a confirmação não coincidem.");
+        return;
+      }
     }
-
     setErro("");
-
     try {
+      let body;
+      if (novaSenha && confirmarNovaSenha) {
+        body = JSON.stringify({ nome, email, senha: novaSenha, senhaAtual });
+      } else {
+        body = JSON.stringify({ nome, email, senhaAtual });
+      }
       const response = await fetch(`http://localhost:8080/api/usuario/${idUsuario}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, email, senha }),
+        body,
       });
-
       if (response.ok) {
         Swal.fire({
           title: "Sucesso!",
           text: "Dados atualizados com sucesso!",
           icon: "success",
+        }).then(() => {
+          navigate("/");
         });
       } else {
         const data = await response.json();
@@ -109,13 +128,18 @@ export default function Usuario() {
         </div>
 
         <div className="input-group senha mb-3">
-          <label className="label-input">Senha</label>
-          <input type="password" className="input-password-cadastro" value={senha} onChange={(e) => setSenha(e.target.value)} />
+          <label className="label-input">Senha Atual</label>
+          <input type="password" className="input-password-cadastro" value={senhaAtual} onChange={(e) => setSenhaAtual(e.target.value)} />
         </div>
 
         <div className="input-group senha mb-3">
-          <label className="label-input">Confirmar Senha</label>
-          <input type="password" className="input-password-cadastro" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} />
+          <label className="label-input">Nova Senha</label>
+          <input type="password" className="input-password-cadastro" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} />
+        </div>
+
+        <div className="input-group senha mb-3">
+          <label className="label-input">Confirmar Nova Senha</label>
+          <input type="password" className="input-password-cadastro" value={confirmarNovaSenha} onChange={(e) => setConfirmarNovaSenha(e.target.value)} />
         </div>
 
         <button className="cadastrar-btn" onClick={handleSalvar}>

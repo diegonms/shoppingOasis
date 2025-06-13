@@ -32,15 +32,13 @@ export default function Login() {
           text: `Bem-vindo(a), ${data.user.nome}`,
           icon: "success",
         }).then(() => {
-          // ✅ Salva o ID e o tipo do usuário
           localStorage.setItem("tipoUsuario", data.user.tipo);
           localStorage.setItem("idUsuario", data.user.id.toString());
 
-          // ✅ Redireciona corretamente
           if (data.user.tipo === "admin") {
             navigate("/testeADM");
           } else {
-            navigate("/usuario");
+            navigate("/");
           }
         });
       } else {
