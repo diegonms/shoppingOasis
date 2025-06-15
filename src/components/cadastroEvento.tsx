@@ -6,17 +6,18 @@ import { Link } from "react-router-dom";
 import InputMask from "react-input-mask";
 
 export default function CadastroEventos() {
-  const [formData, setFormData] = useState({
-    nomeEvento: "",
-    email: "",
-    dataInicio: "",
-    dataFim: "",
-    horarioInicio: "",
-    horarioFim: "",
-    piso: "",
-    tipoEvento: "",
-    imagem: null
-  });
+const [formData, setFormData] = useState({
+  nomeEvento: "",
+  email: "",
+  dataInicio: "",
+  dataFim: "",
+  horarioInicio: "",
+  horarioFim: "",
+  piso: "",
+  tipoEvento: "",
+  imagem: null as File | null
+});
+
 
   const [erro, setErro] = useState("");
 
@@ -28,21 +29,97 @@ export default function CadastroEventos() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!formData.nomeEvento || !formData.dataInicio || !formData.horarioInicio || !formData.email) {
-      setErro("Preencha os campos obrigatórios");
-      return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!formData.nomeEvento || !formData.dataInicio || !formData.horarioInicio || !formData.email) {
+    setErro("Preencha os campos obrigatórios");
+    return;
+  }
+
+  setErro("");
+
+  try {
+    let imagemBase64: string | null = null;
+    if (formData.imagem) {
+      const base64 = await toBase64(formData.imagem);
+      imagemBase64 = base64.split(',')[1];
     }
 
-    setErro("");
+    const eventoPayload = {
+      nome_evento: formData.nomeEvento,
+      email_contato: formData.email,
+      data_inicio: formatarDataISO(formData.dataInicio),
+      data_fim: formatarDataISO(formData.dataFim),
+      horario_inicio: formData.horarioInicio,
+      horario_fim: formData.horarioFim,
+      piso: formData.piso,
+      tipo_evento: formData.tipoEvento,
+      descricao: "",
+      imagem_base64: imagemBase64,
+      status: "pendente",
+      id_usuario_solicitante: 1
+    };
+
+    const response = await fetch("http://localhost:8080/api/evento", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(eventoPayload)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Erro ao cadastrar evento");
+    }
+
     Swal.fire({
       title: "Solicitação enviada!",
       text: "Nossos representantes entrarão em contato em breve.",
       icon: "success"
     });
-  };
+
+    // Limpa formulário
+    setFormData({
+      nomeEvento: "",
+      email: "",
+      dataInicio: "",
+      dataFim: "",
+      horarioInicio: "",
+      horarioFim: "",
+      piso: "",
+      tipoEvento: "",
+      imagem: null
+    });
+
+  } catch (err) {
+    console.error("Erro detalhado:", err);
+    Swal.fire({
+      title: "Erro",
+      text: err.message || "Ocorreu um erro ao enviar o formulário. Verifique sua conexão ou tente novamente mais tarde.",
+      icon: "error"
+    });
+  }
+};
+
+const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string); // cast correto
+    reader.onerror = (error) => reject(error);
+  });
+
+
+const formatarDataISO = (data) => {
+  if (!data) return null;
+  const partes = data.split("/");
+  if (partes.length !== 3) return null;
+  const [dia, mes, ano] = partes;
+  return `${ano}-${mes}-${dia}`;
+};
+
 
   return (
     <div className="cadastro-container">
