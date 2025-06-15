@@ -8,7 +8,7 @@ import InputMask from "react-input-mask";
 export default function CadastroEventos() {
   const [formData, setFormData] = useState({
     nomeEvento: "",
-    email: "", // Added email field
+    email: "",
     dataInicio: "",
     dataFim: "",
     horarioInicio: "",

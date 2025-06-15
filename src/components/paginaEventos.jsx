@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import "./style-pagLojas.css";
@@ -16,14 +16,16 @@ const Eventos = ({ eventos }) => {
         <div className="evento-card-principal">
           <div className="evento-imagem-container">
             <img 
-              src={eventoPrincipal.imagem || "https://placehold.co/600x400"} 
-              alt={eventoPrincipal.nome} 
+              src={eventoPrincipal.imagem_path || "https://placehold.co/600x400"} 
+              alt={eventoPrincipal.nome_evento} 
               className="evento-imagem-principal"
             />
           </div>
           <div className="evento-info-principal">
-            <div className="evento-data-principal">{eventoPrincipal.data}</div>
-            <h3 className="evento-nome-principal">{eventoPrincipal.nome}</h3>
+            <div className="evento-data-principal">
+              {new Date(eventoPrincipal.data_inicio).toLocaleDateString()} - {new Date(eventoPrincipal.data_fim).toLocaleDateString()}
+            </div>
+            <h3 className="evento-nome-principal">{eventoPrincipal.nome_evento}</h3>
             <p className="evento-descricao">{eventoPrincipal.descricao}</p>
           </div>
         </div>
@@ -37,14 +39,16 @@ const Eventos = ({ eventos }) => {
             <div key={index} className="evento-card">
               <div className="evento-imagem-container">
                 <img 
-                  src={evento.imagem || "https://placehold.co/300x200"} 
-                  alt={evento.nome} 
+                  src={evento.imagem_path || "https://placehold.co/300x200"} 
+                  alt={evento.nome_evento} 
                   className="evento-imagem"
                 />
               </div>
               <div className="evento-info">
-                <div className="evento-data">{evento.data}</div>
-                <h4 className="evento-nome">{evento.nome}</h4>
+                <div className="evento-data">
+                  {new Date(evento.data_inicio).toLocaleDateString()} - {new Date(evento.data_fim).toLocaleDateString()}
+                </div>
+                <h4 className="evento-nome">{evento.nome_evento}</h4>
               </div>
             </div>
           ))}
@@ -55,35 +59,46 @@ const Eventos = ({ eventos }) => {
 };
 
 const ShoppingHomepage = () => {
-  const eventosCadastrados = [
-    {
-      nome: "Feira de Artesanato",
-      data: "25/10 - 28/10",
-      descricao: "Maior feira de artesanato da região com mais de 50 expositores",
-      imagem: "https://placehold.co/600x400?text=Feira+Artesanato"
-    },
-    {
-      nome: "Workshop de Gastronomia",
-      data: "30/10",
-      imagem: "https://placehold.co/300x200?text=Workshop+Gastronomia"
-    },
-    {
-      nome: "Exposição de Arte Moderna",
-      data: "05/11 - 15/11",
-      imagem: "https://placehold.co/300x200?text=Arte+Moderna"
-    },
-    {
-      nome: "Palestra Sustentabilidade",
-      data: "20/11",
-      imagem: "https://placehold.co/300x200?text=Sustentabilidade"
-    }
-  ];
+  const [eventos, setEventos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/evento');
+        if (!response.ok) {
+          throw new Error('Erro ao carregar eventos');
+        }
+        const data = await response.json();
+        setEventos(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEventos();
+  }, []);
+
+  if (loading) {
+    return <div className="container">Carregando eventos...</div>;
+  }
+
+  if (error) {
+    return <div className="container">Erro: {error}</div>;
+  }
 
   return (
     <>
       <Navbar />
       <div className="container">
-        <Eventos eventos={eventosCadastrados} />
+        {eventos.length > 0 ? (
+          <Eventos eventos={eventos} />
+        ) : (
+          <p>Nenhum evento disponível no momento.</p>
+        )}
       </div>
       <Footer />
     </>
