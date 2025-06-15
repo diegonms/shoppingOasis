@@ -1,26 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./navbar";
 import "./style.css";
 import Footer from "./footer.jsx";
 import Lojas from "./lojas.jsx";
 import Logo from "../idVisual/logotipoPreto.svg";
 
+// Banner estático
 const Banner = () => (
   <img src="https://placehold.co/1440x480" alt="Banner" className="banner" />
 );
 
-// Componente Eventos modificado para receber apenas o evento principal
+// Componente Eventos com campos nome/data corretos
 const Eventos = ({ eventoPrincipal }) => (
   <div className="eventos-section">
     <h2 className="titulo">Eventos recomendados</h2>
     <div className="eventos-container">
-      {eventoPrincipal && (
+      {eventoPrincipal ? (
         <div className="evento-card">
           <div className="evento-info">
-            <div className="evento-data">{eventoPrincipal.data}</div>
-            <div className="evento-nome">{eventoPrincipal.nome}</div>
+            <div className="evento-data">
+              {eventoPrincipal.data_inicio_formatada}
+              {eventoPrincipal.data_fim_formatada &&
+                ` - ${eventoPrincipal.data_fim_formatada}`}
+            </div>
+            <div className="evento-nome">{eventoPrincipal.nome_evento}</div>
+            {eventoPrincipal.descricao && (
+              <p className="evento-descricao">{eventoPrincipal.descricao}</p>
+            )}
+            {eventoPrincipal.imagem_base64 && (
+              <img
+                src={`data:image/jpeg;base64,${eventoPrincipal.imagem_base64}`}
+                alt={eventoPrincipal.nome_evento}
+                className="evento-imagem"
+              />
+            )}
           </div>
         </div>
+      ) : (
+        <p>Carregando evento...</p>
       )}
     </div>
   </div>
@@ -41,28 +58,32 @@ const lojasCadastradas = [
   }
 ];
 
-const eventosCadastrados = [
-  {
-    nome: "Feira de Artesanato",
-    data: "25/10 - 28/10",
-    descricao: "Maior feira de artesanato da região com mais de 50 expositores",
-    imagem: "https://placehold.co/600x400?text=Feira+Artesanato"
-  },
-
-];
-
 const ShoppingHomepage = () => {
-  const [eventoPrincipal] = eventosCadastrados;
+  const [eventoPrincipal, setEventoPrincipal] = useState(null);
+
+  useEffect(() => {
+    const fetchEventoPrincipal = async () => {
+      try {
+        const resp = await fetch("http://localhost:8080/api/evento/1");
+        if (!resp.ok) throw new Error("Erro ao buscar evento");
+        const data = await resp.json();
+        setEventoPrincipal(data);
+      } catch (err) {
+        console.error("Erro no fetch do evento principal:", err);
+      }
+    };
+    fetchEventoPrincipal();
+  }, []);
 
   return (
     <>
       <Navbar />
       <Banner />
       <div className="container">
-        <Eventos eventoPrincipal={eventoPrincipal} /> {/* Passa apenas o principal */}
+        <Eventos eventoPrincipal={eventoPrincipal} />
         <Lojas lojas={lojasCadastradas} />
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 };

@@ -53,13 +53,7 @@ useEffect(() => {
         endpoint = "/api/loja?status=aprovado";
         break;
       case "eventos":
-        endpoint = "/api/evento?status=aprovado";
-        break;
-      case "lojasPendentes":
-        endpoint = "/api/loja?status=pendente";
-        break;
-      case "eventosPendentes":
-        endpoint = "/api/evento?status=pendente";
+        endpoint = "/api/evento";
         break;
       default:
         setData([]);

@@ -4,56 +4,40 @@ import Footer from "./footer";
 import "./style-pagLojas.css";
 
 const Eventos = ({ eventos }) => {
-  // Separa o evento principal (primeiro da lista) dos demais
-  const [eventoPrincipal, ...outrosEventos] = eventos;
-
   return (
-    <div className="eventos-section">
-      <h2 className="titulo">Eventos</h2>
-      
-      {/* Evento Principal (destaque) */}
-      <div className="evento-principal">
-        <div className="evento-card-principal">
+    <div className="eventos-grid">
+      {eventos.map((evento) => (
+        <div key={evento.id} className="evento-card">
           <div className="evento-imagem-container">
-            <img 
-              src={eventoPrincipal.imagem_path || "https://placehold.co/600x400"} 
-              alt={eventoPrincipal.nome_evento} 
-              className="evento-imagem-principal"
-            />
+            {evento.imagem_base64 ? (
+              <img 
+                src={`data:image/jpeg;base64,${evento.imagem_base64}`}
+                alt={evento.nome_evento}
+                className="evento-imagem"
+                onError={(e) => {
+                  e.target.src = "https://placehold.co/300x200";
+                  console.error("Erro ao carregar imagem do evento", evento.id);
+                }}
+              />
+            ) : (
+              <img
+                src="https://placehold.co/300x200"
+                alt={evento.nome_evento}
+                className="evento-imagem"
+              />
+            )}
           </div>
-          <div className="evento-info-principal">
-            <div className="evento-data-principal">
-              {new Date(eventoPrincipal.data_inicio).toLocaleDateString()} - {new Date(eventoPrincipal.data_fim).toLocaleDateString()}
+          <div className="evento-info">
+            <div className="evento-data">
+              {evento.data_inicio_formatada} {evento.data_fim && `- ${evento.data_fim_formatada}`}
             </div>
-            <h3 className="evento-nome-principal">{eventoPrincipal.nome_evento}</h3>
-            <p className="evento-descricao">{eventoPrincipal.descricao}</p>
+            <h3 className="evento-nome">{evento.nome_evento}</h3>
+            {evento.descricao && (
+              <p className="evento-descricao">{evento.descricao}</p>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* Demais Eventos */}
-      <div className="outros-eventos-container">
-        <h3 className="subtitulo">Outros Eventos</h3>
-        <div className="outros-eventos-grid">
-          {outrosEventos.map((evento, index) => (
-            <div key={index} className="evento-card">
-              <div className="evento-imagem-container">
-                <img 
-                  src={evento.imagem_path || "https://placehold.co/300x200"} 
-                  alt={evento.nome_evento} 
-                  className="evento-imagem"
-                />
-              </div>
-              <div className="evento-info">
-                <div className="evento-data">
-                  {new Date(evento.data_inicio).toLocaleDateString()} - {new Date(evento.data_fim).toLocaleDateString()}
-                </div>
-                <h4 className="evento-nome">{evento.nome_evento}</h4>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
   );
 };
@@ -63,41 +47,43 @@ const ShoppingHomepage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchEventos = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/api/evento');
-        if (!response.ok) {
-          throw new Error('Erro ao carregar eventos');
-        }
-        const data = await response.json();
-        setEventos(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+useEffect(() => {
+  const fetchEventos = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/evento');
+      
+      // Verifique o tipo de conteúdo da resposta
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        throw new Error(`Resposta inesperada: ${text.substring(0, 100)}...`);
       }
-    };
+      
+      const data = await response.json();
+      setEventos(data);
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchEventos();
-  }, []);
+  fetchEventos();
+}, []);
 
-  if (loading) {
-    return <div className="container">Carregando eventos...</div>;
-  }
-
-  if (error) {
-    return <div className="container">Erro: {error}</div>;
-  }
+  if (loading) return <div className="container">Carregando...</div>;
+  if (error) return <div className="container">Erro: {error}</div>;
 
   return (
     <>
       <Navbar />
       <div className="container">
+        <h1 className="page-title">Eventos</h1>
         {eventos.length > 0 ? (
           <Eventos eventos={eventos} />
         ) : (
-          <p>Nenhum evento disponível no momento.</p>
+          <p>Nenhum evento disponível no momento</p>
         )}
       </div>
       <Footer />
