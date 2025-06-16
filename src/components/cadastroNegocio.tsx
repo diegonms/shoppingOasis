@@ -26,20 +26,44 @@ export default function CadastroNegocio() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.nomeNegocio || !formData.cnpj || !formData.email) {
       setErro("Preencha os campos obrigatórios");
       return;
     }
 
-    setErro("");
-    Swal.fire({
-      title: "Solicitação enviada!",
-      text: "Nossos representantes entrarão em contato em breve.",
-      icon: "success"
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        if (typeof value === "string" || value instanceof Blob) {
+          data.append(key, value);
+        }
+      }
     });
+
+    setErro("");
+
+    try {
+      const response = await fetch('http://localhost:8080/api/loja', {
+        method: 'POST',
+        body: data
+      });
+
+      if (response.ok) {
+        Swal.fire({
+          title: "Solicitação enviada!",
+          text: "Nossos representantes entrarão em contato em breve.",
+          icon: "success"
+        });
+      } else {
+        const data = await response.json();
+        setErro(data.error || "Erro ao cadastrar negócio.");
+      }
+    } catch (error) {
+      setErro("Erro ao conectar com o servidor.");
+    }
   };
 
   return (
