@@ -31,7 +31,7 @@ useEffect(() => {
               totalUsuarios: usuariosRes.total,
               lojasAtivas: lojasRes.total,
               eventosAtivos: eventosRes.total,
-              pendentes: pendentesRes.lojasPendentes + pendentesRes.eventosPendentes,
+              pendentes: (pendentesRes.lojasPendentes || 0) + (pendentesRes.eventosPendentes || 0),
           });
       } catch (error) {
           console.error("Erro ao buscar estatísticas:", error);
@@ -203,7 +203,7 @@ useEffect(() => {
         return res.json();
       })
       .then(() => {
-        setData(data.map(item => (item.id === editingItem.id ? { ...item, ...eventoData } : item)));
+        setData(data.map (item => (item.id === editingItem.id ? { ...item, ...eventoData } : item)));
         Swal.fire("Sucesso!", "Evento editado no banco de dados.", "success");
         setEditingItem(null);
       })
@@ -337,21 +337,31 @@ useEffect(() => {
                   </td>
                 ))}
                 <td className="actions">
-                  {isPending ? (
-                    <button className="btn-approve" onClick={() => handleApproveLoja(item.id)}>
-                      Aprovar
-                    </button>
+                  {activeSection === "lojasPendentes" ? (
+                    <>
+                      <button className="btn-approve" onClick={() => handleApproveLoja(item.id)}>
+                        Aprovar
+                      </button>
+                      <button className="btn-delete" onClick={() => handleDelete(item.id)}>
+                        Remover
+                      </button>
+                    </>
                   ) : activeSection === "eventosPendentes" ? (
-                    <button className="btn-approve" onClick={() => handleApproveEvento(item.id)}>
-                      Aprovar
-                    </button>
+                    <>
+                      <button className="btn-approve" onClick={() => handleApproveEvento(item.id)}>
+                        Aprovar
+                      </button>
+                      <button className="btn-delete" onClick={() => handleDelete(item.id)}>
+                        Remover
+                      </button>
+                    </>
                   ) : (
                     <>
                       <button className="btn-edit" onClick={() =>
-  editingItem?.id === item.id ? handleSave(item.id) : handleEdit(item)
-}>
-  {editingItem?.id === item.id ? "Salvar" : "Editar"}
-</button>
+                        editingItem?.id === item.id ? handleSave(item.id) : handleEdit(item)
+                      }>
+                        {editingItem?.id === item.id ? "Salvar" : "Editar"}
+                      </button>
                       {editingItem?.id === item.id ? (
                         <button className="btn-cancel" onClick={() => setEditingItem(null)}>
                           Cancelar

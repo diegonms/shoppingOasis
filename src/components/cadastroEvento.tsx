@@ -28,6 +28,12 @@ export default function CadastroEventos() {
     }));
   };
 
+  function formatDateToISO(dateStr: string): string {
+    if (!dateStr) return "";
+    const [day, month, year] = dateStr.split("/");
+    return `${year}-${month}-${day}`;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.nomeEvento || !formData.dataInicio || !formData.horarioInicio || !formData.email) {
@@ -35,11 +41,40 @@ export default function CadastroEventos() {
       return;
     }
     setErro("");
+    let imagem_base64: string | null = null;
+    if (formData.imagem) {
+      imagem_base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result;
+          if (typeof result === "string") {
+            resolve(result.split(',')[1]);
+          } else {
+            reject(new Error("Erro ao ler imagem"));
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(formData.imagem);
+      });
+    }
     try {
+      const mappedData = {
+        nome_evento: formData.nomeEvento,
+        email_contato: formData.email,
+        data_inicio: formatDateToISO(formData.dataInicio),
+        data_fim: formatDateToISO(formData.dataFim),
+        horario_inicio: formData.horarioInicio,
+        horario_fim: formData.horarioFim,
+        piso: formData.piso,
+        tipo_evento: formData.tipoEvento,
+        descricao: "", // Adapte se quiser um campo de descrição
+        status: "pendente",
+        ...(imagem_base64 && { imagem_base64 })
+      };
       const response = await fetch('http://localhost:8080/api/evento', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(mappedData)
       });
       if (response.ok) {
         Swal.fire({
