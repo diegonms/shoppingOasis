@@ -10,6 +10,8 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const tipoUsuario = localStorage.getItem("tipoUsuario");
+  const nomeNavbar = tipoUsuario === "admin" ? "Administrador" : "Usuário";
+  const rotaUsuario = tipoUsuario === "admin" ? "/testeADM" : "/usuario";
 
   const handleLogout = () => {
     localStorage.clear(); 
@@ -28,9 +30,10 @@ const Navbar = () => {
         <Link to="/paginalojas" className="nav-link">Lojas</Link>
         <Link to="/paginaeventos" className="nav-link">Eventos</Link>
 
+        {/* Usuário/Admin dinâmico */}
         {tipoUsuario && (
-        <Link to="/usuario" className="nav-link">Usuário</Link>
-)}
+          <Link to={rotaUsuario} className="nav-link">{nomeNavbar}</Link>
+        )}
 
 
         <div onClick={() => setIsMenuOpen(true)} style={{ cursor: "pointer" }}>
@@ -67,14 +70,18 @@ const Navbar = () => {
               <Link to="/">
                 <img className="logo-sidemenu" src="./src/idVisual/logotipoPreto.svg" alt="Logo" />
               </Link>
-              <Link 
-                to="/login" 
-                className="menu-link footer-content" 
-                style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login ou Cadastro
-              </Link>
+              
+              {/* Esconde Login/Cadastro se logado */}
+              { !tipoUsuario && (
+                <Link 
+                  to="/login" 
+                  className="menu-link footer-content" 
+                  style={{ fontSize: '16px', color: '#001219', textDecoration: 'none' }}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login ou Cadastro
+                </Link>
+              )}
               
               <Link 
                 to="/cadastroNegocio" 

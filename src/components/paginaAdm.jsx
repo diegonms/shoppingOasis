@@ -50,10 +50,16 @@ useEffect(() => {
         endpoint = "/api/usuario";
         break;
       case "lojas":
-        endpoint = "/api/loja?status=aprovado";
+        endpoint = "/api/loja";
         break;
       case "eventos":
         endpoint = "/api/evento";
+        break;
+      case "lojasPendentes":
+        endpoint = "/api/loja/pendente";
+        break;
+      case "eventosPendentes":
+        endpoint = "/api/evento/pendente";
         break;
       default:
         setData([]);
@@ -104,13 +110,25 @@ useEffect(() => {
         .catch(() => {
           Swal.fire("Erro!", "Não foi possível excluir o usuário.", "error");
         });
+    } else if (activeSection === "lojas" || activeSection === "lojasPendentes") {
+      fetch(`http://localhost:8080/api/loja/${id}`, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(() => {
+          setData(data.filter(item => item.id !== id));
+          Swal.fire("Removido!", "A loja foi excluída do banco de dados.", "success");
+        })
+        .catch(() => {
+          Swal.fire("Erro!", "Não foi possível excluir a loja.", "error");
+        });
     } else {
       setData(data.filter(item => item.id !== id));
       Swal.fire("Removido!", "O item foi excluído.", "success");
     }
   };
 
- const handleSave = () => {
+ const handleSave = (id) => {
   if (activeSection === "users" && editingItem) {
     const { senha, ...userData } = formData;
     const payload = {
@@ -118,7 +136,7 @@ useEffect(() => {
       senhaAtual: "admin" // TODO: peça ao usuário a senha atual de forma segura
     };
 
-    fetch(`http://localhost:8080/api/usuario/${editingItem.id}`, {
+    fetch(`http://localhost:8080/api/usuario/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -134,6 +152,63 @@ useEffect(() => {
       })
       .catch(() => {
         Swal.fire("Erro!", "Não foi possível editar o usuário.", "error");
+      });
+  } else if ((activeSection === "lojas" || activeSection === "lojasPendentes") && editingItem) {
+    // Garante que todos os campos necessários sejam enviados
+    const lojaAntiga = data.find(item => item.id === editingItem.id) || {};
+    const lojaData = {
+      nome_negocio: formData.nome_negocio ?? lojaAntiga.nome_negocio ?? '',
+      cnpj: formData.cnpj ?? lojaAntiga.cnpj ?? '',
+      telefone: formData.telefone ?? lojaAntiga.telefone ?? '',
+      email: formData.email ?? lojaAntiga.email ?? '',
+      descricao: formData.descricao ?? lojaAntiga.descricao ?? '',
+      categoria: formData.categoria ?? lojaAntiga.categoria ?? '',
+      status: formData.status ?? lojaAntiga.status ?? ''
+    };
+    fetch(`http://localhost:8080/api/loja/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(lojaData)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao atualizar");
+        return res.json();
+      })
+      .then(() => {
+        setData(data.map(item => (item.id === editingItem.id ? { ...item, ...lojaData } : item)));
+        Swal.fire("Sucesso!", "Loja editada no banco de dados.", "success");
+        setEditingItem(null);
+      })
+      .catch(() => {
+        Swal.fire("Erro!", "Não foi possível editar a loja.", "error");
+      });
+  } else if ((activeSection === "eventos" || activeSection === "eventosPendentes") && editingItem) {
+    // Garante que todos os campos necessários sejam enviados
+    const eventoAntigo = data.find(item => item.id === editingItem.id) || {};
+    const eventoData = {
+      nome_evento: formData.nome_evento ?? eventoAntigo.nome_evento ?? '',
+      email_contato: formData.email_contato ?? eventoAntigo.email_contato ?? '',
+      data_inicio: formData.data_inicio ?? eventoAntigo.data_inicio ?? '',
+      data_fim: formData.data_fim ?? eventoAntigo.data_fim ?? '',
+      descricao: formData.descricao ?? eventoAntigo.descricao ?? '',
+      status: formData.status ?? eventoAntigo.status ?? ''
+    };
+    fetch(`http://localhost:8080/api/evento/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(eventoData)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao atualizar");
+        return res.json();
+      })
+      .then(() => {
+        setData(data.map(item => (item.id === editingItem.id ? { ...item, ...eventoData } : item)));
+        Swal.fire("Sucesso!", "Evento editado no banco de dados.", "success");
+        setEditingItem(null);
+      })
+      .catch(() => {
+        Swal.fire("Erro!", "Não foi possível editar o evento.", "error");
       });
   } else {
     Swal.fire("Sucesso!", "Alterações salvas com sucesso.", "success");
@@ -166,17 +241,53 @@ useEffect(() => {
     });
   };
 
-  const handleApprove = (id) => {
-    Swal.fire("Aprovado!", "O item foi aprovado e movido.", "success");
-    setData(prev => prev.filter(item => item.id !== id));
+  const handleApproveLoja = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/loja/aprovar/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) throw new Error('Erro ao aprovar loja');
+      Swal.fire("Aprovado!", "A loja foi aprovada com sucesso.", "success");
+      setData(prev => prev.filter(item => item.id !== id));
+    } catch (error) {
+      Swal.fire("Erro!", "Não foi possível aprovar a loja.", "error");
+    }
   };
+
+  const handleApproveEvento = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/evento/aprovar/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) throw new Error('Erro ao aprovar evento');
+      Swal.fire("Aprovado!", "O evento foi aprovado com sucesso.", "success");
+      // Refaz o fetch dos eventos pendentes para garantir atualização
+      if (activeSection === "eventosPendentes") {
+        setIsLoading(true);
+        fetch('http://localhost:8080/api/evento/pendente')
+          .then(res => res.json())
+          .then(json => {
+            setData(Array.isArray(json) ? json : []);
+            setIsLoading(false);
+          })
+          .catch(() => setIsLoading(false));
+      } else {
+        setData(prev => prev.filter(item => item.id !== id));
+      }
+    } catch (error) {
+      Swal.fire("Erro!", "Não foi possível aprovar o evento.", "error");
+    }
+  };
+
 
   const renderTable = () => {
     if (isLoading) return <div className="loading">Carregando...</div>;
     if (!Array.isArray(data)) return <div className="no-data">Erro ao carregar dados.</div>;
     if (data.length === 0) return <div className="no-data">Nenhum dado encontrado.</div>;
 
-    const columns = Object.keys(data[0]);
+    const columns = Object.keys(data[0]).filter(col => col !== 'imagem_base64' && col !== 'imagem_blob');
     const isPending = activeSection.includes("Pendentes");
 
     return (
@@ -199,29 +310,48 @@ useEffect(() => {
                       // Do not allow editing or showing the password field
                       col === 'senha' ? (
                         <span>******</span>
+                      ) : col === 'status' && (activeSection === 'lojas' || activeSection === 'lojasPendentes' || activeSection === 'eventos' || activeSection === 'eventosPendentes') ? (
+                        <select
+                          name="status"
+                          value={formData.status || ''}
+                          onChange={handleInputChange}
+                        >
+                          <option value="pendente">pendente</option>
+                          <option value="aprovado">aprovado</option>
+                        </select>
                       ) : (
                         <input
                           type="text"
                           name={col}
-                          value={formData[col] || ""}
+                          value={typeof formData[col] === 'object' && formData[col] !== null ? JSON.stringify(formData[col]) : formData[col] || ""}
                           onChange={handleInputChange}
                         />
                       )
                     ) : (
-                      col === 'senha' ? '******' : item[col]
+                      col === 'senha'
+                        ? '******'
+                        : (typeof item[col] === 'object' && item[col] !== null
+                            ? JSON.stringify(item[col])
+                            : item[col])
                     )}
                   </td>
                 ))}
                 <td className="actions">
                   {isPending ? (
-                    <button className="btn-approve" onClick={() => handleApprove(item.id)}>
+                    <button className="btn-approve" onClick={() => handleApproveLoja(item.id)}>
+                      Aprovar
+                    </button>
+                  ) : activeSection === "eventosPendentes" ? (
+                    <button className="btn-approve" onClick={() => handleApproveEvento(item.id)}>
                       Aprovar
                     </button>
                   ) : (
                     <>
-                      <button className="btn-edit" onClick={() => handleEdit(item)}>
-                        {editingItem?.id === item.id ? "Salvar" : "Editar"}
-                      </button>
+                      <button className="btn-edit" onClick={() =>
+  editingItem?.id === item.id ? handleSave(item.id) : handleEdit(item)
+}>
+  {editingItem?.id === item.id ? "Salvar" : "Editar"}
+</button>
                       {editingItem?.id === item.id ? (
                         <button className="btn-cancel" onClick={() => setEditingItem(null)}>
                           Cancelar
