@@ -25,7 +25,6 @@ export default function Login() {
 
       const data = await response.json();
 
-      // ⚠️ Verifica se veio user.id
       if (response.ok && data.user && data.user.id) {
         Swal.fire({
           title: "Login feito!",

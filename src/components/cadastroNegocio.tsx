@@ -3,9 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style-cad-lojas.css";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import InputMask from "react-input-mask"
+import InputMask from "react-input-mask";
 
 export default function CadastroNegocio() {
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+  const userId = usuario?.id;
+
   const [formData, setFormData] = useState({
     nomeNegocio: "",
     cnpj: "",
@@ -34,32 +37,46 @@ export default function CadastroNegocio() {
       return;
     }
 
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        if (typeof value === "string" || value instanceof Blob) {
-          data.append(key, value);
-        }
-      }
-    });
+    let imagem_base64: string | null = null;
+    if (formData.imagem) {
+      imagem_base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result;
+          if (typeof result === "string") {
+            resolve(result.split(',')[1]);
+          } else {
+            reject(new Error("Erro ao ler imagem"));
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(formData.imagem);
+      });
+    }
 
-    setErro("");
+    const dataToSend = {
+      nome_negocio: formData.nomeNegocio,
+      cnpj: formData.cnpj,
+      telefone: formData.telefone,
+      email: formData.email,
+      descricao: formData.descricao,
+      categoria: formData.categoria,
+      ...(imagem_base64 && { imagem_base64 }),
+      id_usuario_solicitante: userId || 1
+    };
 
     try {
       const response = await fetch('http://localhost:8080/api/loja', {
         method: 'POST',
-        body: data
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSend)
       });
 
       if (response.ok) {
-        Swal.fire({
-          title: "Solicitação enviada!",
-          text: "Nossos representantes entrarão em contato em breve.",
-          icon: "success"
-        });
+        Swal.fire("Solicitação enviada!", "Em breve entraremos em contato.", "success");
       } else {
-        const data = await response.json();
-        setErro(data.error || "Erro ao cadastrar negócio.");
+        const err = await response.json();
+        setErro(err.error || "Erro ao cadastrar.");
       }
     } catch (error) {
       setErro("Erro ao conectar com o servidor.");
@@ -69,19 +86,11 @@ export default function CadastroNegocio() {
   return (
     <div className="cadastro-container">
       <Link to="/">
-        <img
-          className="logo-cadastro"
-          src="./src/idVisual/logotipoPreto.svg"
-          alt="Logo"
-        />
+        <img className="logo-cadastro" src="./src/idVisual/logotipoPreto.svg" alt="Logo" />
       </Link>
 
       <div className="imagem-container">
-        <img
-          src="./src/idVisual/fundoCadLojas.png"
-          alt="Imagem de fundo"
-          className="imagem imagem-fundo"
-        />
+        <img src="./src/idVisual/fundoCadLojas.png" alt="Imagem de fundo" className="imagem imagem-fundo" />
       </div>
 
       <div className="container-input-cadastro">
@@ -93,74 +102,32 @@ export default function CadastroNegocio() {
         <form onSubmit={handleSubmit}>
           <div className="input-group mb-3">
             <label className="label-input">Nome do seu negócio*</label>
-            <input
-              type="text"
-              name="nomeNegocio"
-              className="input-nome"
-              placeholder="Digite o nome do negócio"
-              value={formData.nomeNegocio}
-              onChange={handleChange}
-            />
+            <input type="text" name="nomeNegocio" className="input-nome" placeholder="Digite o nome do negócio" value={formData.nomeNegocio} onChange={handleChange} />
           </div>
 
           <div className="input-group mb-3">
             <label className="label-input">CNPJ*</label>
-            <InputMask
-              type="text"
-              name="cnpj"
-              className="input-nome"
-              mask="99.999.999/9999-99"
-              placeholder="00.000.000/0000-00"
-              value={formData.cnpj}
-              onChange={handleChange}
-            />
+            <InputMask type="text" name="cnpj" className="input-nome" mask="99.999.999/9999-99" placeholder="00.000.000/0000-00" value={formData.cnpj} onChange={handleChange} />
           </div>
 
           <div className="input-group mb-3">
             <label className="label-input">Telefone</label>
-            <InputMask
-              type="tel"
-              name="telefone"
-              className="input-nome"
-              mask="(99) 99999-9999"
-              placeholder="(00) 00000-0000"
-              value={formData.telefone}
-              onChange={handleChange}
-            />
+            <InputMask type="tel" name="telefone" className="input-nome" mask="(99) 99999-9999" placeholder="(00) 00000-0000" value={formData.telefone} onChange={handleChange} />
           </div>
 
           <div className="input-group mb-3">
             <label className="label-input">Email*</label>
-            <input
-              type="email"
-              name="email"
-              className="input-email"
-              placeholder="seu@email.com"
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <input type="email" name="email" className="input-email" placeholder="seu@email.com" value={formData.email} onChange={handleChange} />
           </div>
 
           <div className="input-group mb-3">
             <label className="label-input">Sua melhor cenário!</label>
-            <textarea
-              name="descricao"
-              className="input-nome"
-              placeholder="Descreva seu negócio"
-              value={formData.descricao}
-              onChange={handleChange}
-              style={{ height: '100px' }}
-            />
+            <textarea name="descricao" className="input-nome" placeholder="Descreva seu negócio" value={formData.descricao} onChange={handleChange} style={{ height: '100px' }} />
           </div>
 
           <div className="input-group mb-3">
             <label className="label-input">Categoria</label>
-            <select
-              name="categoria"
-              className="input-nome"
-              value={formData.categoria}
-              onChange={handleChange}
-            >
+            <select name="categoria" className="input-nome" value={formData.categoria} onChange={handleChange}>
               <option value="">Escolha uma categoria</option>
               <option value="restaurante">Restaurante</option>
               <option value="varejo">Varejo</option>
@@ -170,20 +137,10 @@ export default function CadastroNegocio() {
 
           <div className="input-group mb-3">
             <label className="label-input">Imagem</label>
-            <input
-              type="file"
-              name="imagem"
-              className="input-nome"
-              onChange={handleChange}
-              accept="image/*"
-            />
+            <input type="file" name="imagem" className="input-nome" onChange={handleChange} accept="image/*" />
           </div>
 
-          <button 
-            type="submit" 
-            className="cadastrar-btn"
-            style={{ backgroundColor: '#001219' }}
-          >
+          <button type="submit" className="cadastrar-btn" style={{ backgroundColor: '#001219' }}>
             Enviar Solicitação
           </button>
         </form>
