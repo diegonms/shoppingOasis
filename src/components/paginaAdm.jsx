@@ -65,7 +65,12 @@ useEffect(() => {
     fetch(`http://localhost:8080${endpoint}`)
       .then(res => res.json())
       .then(json => {
-        setData(json);
+        console.log("Dados recebidos:", json);
+        if (!Array.isArray(json)) {
+          setData([]);
+        } else {
+          setData(json);
+        }
         setIsLoading(false);
       })
       .catch(err => {
@@ -76,7 +81,9 @@ useEffect(() => {
 
   const handleEdit = (item) => {
     setEditingItem(item);
-    setFormData(item);
+    // Remove 'senha' from formData to avoid editing or sending it
+    const { senha, ...rest } = item;
+    setFormData(rest);
   };
 
   const handleInputChange = (e) => {
@@ -84,10 +91,55 @@ useEffect(() => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
+  const handleDelete = (id) => {
+    if (activeSection === "users") {
+      fetch(`http://localhost:8080/api/usuario/${id}`, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(() => {
+          setData(data.filter(item => item.id !== id));
+          Swal.fire("Removido!", "O usuário foi excluído do banco de dados.", "success");
+        })
+        .catch(() => {
+          Swal.fire("Erro!", "Não foi possível excluir o usuário.", "error");
+        });
+    } else {
+      setData(data.filter(item => item.id !== id));
+      Swal.fire("Removido!", "O item foi excluído.", "success");
+    }
+  };
+
+ const handleSave = () => {
+  if (activeSection === "users" && editingItem) {
+    const { senha, ...userData } = formData;
+    const payload = {
+      ...userData,
+      senhaAtual: "admin" // TODO: peça ao usuário a senha atual de forma segura
+    };
+
+    fetch(`http://localhost:8080/api/usuario/${editingItem.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao atualizar");
+        return res.json();
+      })
+      .then(() => {
+        setData(data.map(item => (item.id === editingItem.id ? { ...item, ...userData } : item)));
+        Swal.fire("Sucesso!", "Usuário editado no banco de dados.", "success");
+        setEditingItem(null);
+      })
+      .catch(() => {
+        Swal.fire("Erro!", "Não foi possível editar o usuário.", "error");
+      });
+  } else {
     Swal.fire("Sucesso!", "Alterações salvas com sucesso.", "success");
     setEditingItem(null);
-  };
+  }
+};
 
   const handleLogout = () => {
     Swal.fire({
@@ -114,22 +166,6 @@ useEffect(() => {
     });
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Confirmar exclusão",
-      text: "Tem certeza que deseja remover este item?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sim, remover",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setData(data.filter(item => item.id !== id));
-        Swal.fire("Removido!", "O item foi excluído.", "success");
-      }
-    });
-  };
-
   const handleApprove = (id) => {
     Swal.fire("Aprovado!", "O item foi aprovado e movido.", "success");
     setData(prev => prev.filter(item => item.id !== id));
@@ -137,6 +173,7 @@ useEffect(() => {
 
   const renderTable = () => {
     if (isLoading) return <div className="loading">Carregando...</div>;
+    if (!Array.isArray(data)) return <div className="no-data">Erro ao carregar dados.</div>;
     if (data.length === 0) return <div className="no-data">Nenhum dado encontrado.</div>;
 
     const columns = Object.keys(data[0]);
@@ -159,14 +196,19 @@ useEffect(() => {
                 {columns.map(col => (
                   <td key={`${item.id}-${col}`}>
                     {editingItem?.id === item.id ? (
-                      <input
-                        type="text"
-                        name={col}
-                        value={formData[col] || ""}
-                        onChange={handleInputChange}
-                      />
+                      // Do not allow editing or showing the password field
+                      col === 'senha' ? (
+                        <span>******</span>
+                      ) : (
+                        <input
+                          type="text"
+                          name={col}
+                          value={formData[col] || ""}
+                          onChange={handleInputChange}
+                        />
+                      )
                     ) : (
-                      item[col]
+                      col === 'senha' ? '******' : item[col]
                     )}
                   </td>
                 ))}

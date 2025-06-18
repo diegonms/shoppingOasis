@@ -11,7 +11,7 @@ import PaginaAdm from "./components/paginaAdm";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import TesteADM from "./components/paginaAdm";
 import Usuario from "./components/usuario";
-import PrivateRouteUser from './components/PrivateRouteUser';
+import PrivateRouteUser from './components/PrivateRouteUser'; 
 
 
 function App() {
